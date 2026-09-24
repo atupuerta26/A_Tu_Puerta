@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#171512">
+<title>A tu puerta — Verde elegante</title>
+<style>
+:root{
+  --bg:#f3f1e8;--card:#fffef9;--ink:#142019;--muted:#768078;--line:#e2e7df;
+  --red:#1d6f50;--red2:#2f8d68;--green:#1d6f50;--gold:#d7b65d;--sand:#e4dfcf;
+  --shadow:0 16px 42px rgba(42,31,20,.12)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#d9d1c5;color:var(--ink)}
+button,input{font:inherit}button{border:0}
+.app{width:100%;max-width:470px;margin:auto;min-height:100vh;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.28)),var(--bg);position:relative;overflow:hidden;padding-bottom:92px}
+.screen{display:none}.screen.active{display:block;animation:fade .26s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pattern{background:linear-gradient(135deg,transparent 25%,rgba(255,255,255,.08) 25% 35%,transparent 35% 65%,rgba(255,255,255,.08) 65% 75%,transparent 75%) 0 0/30px 30px}
+
+/* LOGIN */
+.login-screen{
+  position:fixed;inset:0;z-index:200;background:
+  radial-gradient(circle at 80% 10%,rgba(29,111,80,.24),transparent 28%),
+  radial-gradient(circle at 5% 85%,rgba(232,182,76,.18),transparent 26%),
+  #171512;display:flex;align-items:center;justify-content:center;padding:22px
+}
+.login-screen.hidden{display:none}
+.login-card{width:100%;max-width:420px;color:white}
+.login-logo{width:62px;height:62px;border-radius:22px;background:var(--red);display:grid;place-items:center;font-size:30px;font-weight:950;box-shadow:0 16px 34px rgba(29,111,80,.24)}
+.login-card h1{font-size:35px;line-height:1;margin:18px 0 8px;letter-spacing:-1.6px}
+.login-card>p{font-size:12px;color:#bdb6ad;line-height:1.55;margin:0 0 22px;max-width:330px}
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;background:#24211d;border-radius:16px;padding:5px;margin-bottom:12px}
+.auth-tab{padding:10px;border-radius:12px;background:transparent;color:#aaa39b;font-size:11px;font-weight:900}
+.auth-tab.active{background:white;color:var(--ink)}
+.auth-panel{display:none}.auth-panel.active{display:block}
+.field{margin-top:10px}
+.field label{display:block;font-size:9px;color:#aaa39b;text-transform:uppercase;letter-spacing:.11em;font-weight:850;margin:0 0 6px 4px}
+.field input{width:100%;border:1px solid #3c3731;outline:0;background:#24211d;color:white;border-radius:16px;padding:13px 14px;font-size:12px}
+.field input:focus{border-color:#776d62}
+.auth-submit{width:100%;margin-top:14px;padding:14px;border-radius:17px;background:var(--red);color:white;font-weight:950;font-size:12px}
+.auth-note{font-size:9px;color:#7e776e;text-align:center;margin-top:12px;line-height:1.45}
+.login-error{font-size:10px;color:#ff9c91;margin-top:9px;display:none}
+
+/* HOME */
+.header{padding:18px 18px 16px;background:var(--ink);color:white;border-radius:0 0 34px 34px;position:relative;overflow:hidden}
+.header::after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,rgba(29,111,80,.45),rgba(198,63,53,0) 70%);right:-55px;top:-70px}
+.topbar{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2}
+.logo-wrap{display:flex;gap:10px;align-items:center}
+.logo{width:42px;height:42px;border-radius:15px;background:var(--red);color:white;display:grid;place-items:center;font-weight:950;font-size:21px;box-shadow:0 8px 20px rgba(29,111,80,.24)}
+.brand b{display:block;font-size:18px;letter-spacing:-.5px}.brand small{display:block;font-size:10px;opacity:.62;margin-top:1px}
+.iconbtn{width:40px;height:40px;border-radius:14px;background:rgba(255,255,255,.09);color:white;font-size:18px}
+.greeting{margin-top:20px;position:relative;z-index:2}.greeting small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#d9d3cb;font-weight:800}
+.greeting h1{font-size:30px;line-height:1.03;letter-spacing:-1.4px;margin:7px 0 8px;max-width:330px}
+.greeting p{font-size:11px;color:#bfb7ac;margin:0;line-height:1.5;max-width:325px}
+.address-card{margin-top:18px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.08);padding:11px 12px;border-radius:17px;position:relative;z-index:2;backdrop-filter:blur(8px)}
+.address-left{display:flex;gap:9px;align-items:center}.pin{width:34px;height:34px;border-radius:12px;background:var(--red);display:grid;place-items:center}
+.address-left b{display:block;font-size:12px}.address-left small{display:block;font-size:9px;color:#bdb5ab;margin-top:2px}.address-card span{font-size:12px;color:#d9d0c4}
+.search-wrap{padding:14px 18px 0}.search{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 13px;display:flex;gap:10px;align-items:center;box-shadow:0 7px 22px rgba(45,32,20,.06)}
+.search input{border:0;outline:0;background:transparent;width:100%;font-size:13px;color:var(--ink)}.search .filter{width:34px;height:34px;border-radius:12px;background:#f0e9df;color:var(--ink)}
+.section{padding:18px 18px 0}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:11px}
+.section-head h2{margin:0;font-size:20px;letter-spacing:-.5px}.section-head small{font-size:10px;color:var(--muted)}.link{background:none;color:var(--red);font-size:10px;font-weight:900}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.quick{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:12px 6px;text-align:center;transition:.2s}
+.quick.active{background:var(--ink);color:white;transform:translateY(-2px)}.quick .ico{font-size:24px;display:block;margin-bottom:6px}.quick span{font-size:9px;font-weight:850}
+.hero-card{margin:16px 18px 0;background:linear-gradient(135deg,#1d6f50,#2f8d68 68%,#70b08e);color:white;border-radius:29px;padding:18px;display:grid;grid-template-columns:1.25fr .75fr;gap:10px;min-height:155px;position:relative;overflow:hidden;box-shadow:0 14px 35px rgba(29,111,80,.22)}
+.hero-card::after{content:"";position:absolute;width:120px;height:120px;border:22px solid rgba(255,255,255,.1);border-radius:50%;right:-45px;bottom:-50px}
+.hero-card small{font-size:9px;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:#ffe0d8}.hero-card h3{font-size:20px;line-height:1.06;margin:7px 0 7px;letter-spacing:-.5px}
+.hero-card p{font-size:10px;line-height:1.45;margin:0;opacity:.86}.hero-card button{margin-top:13px;background:white;color:var(--red);border-radius:999px;padding:8px 11px;font-size:10px;font-weight:900}.hero-food{display:flex;align-items:center;justify-content:center;font-size:66px;position:relative;z-index:2}
+.scroll-row{display:flex;gap:11px;overflow:auto;scrollbar-width:none}.restaurant-card{min-width:230px;background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;box-shadow:0 9px 25px rgba(45,32,20,.06)}
+.restaurant-art{height:125px;position:relative;display:grid;place-items:center;font-size:62px;background:linear-gradient(145deg,#ead8c0,#f6e7d5)}
+.restaurant-card:nth-child(2n) .restaurant-art{background:linear-gradient(145deg,#d9e7d7,#eff5eb)}
+.restaurant-card:nth-child(3n) .restaurant-art{background:linear-gradient(145deg,#ead9d5,#f6ece8)}
+.tag{position:absolute;left:10px;top:10px;background:rgba(23,21,18,.9);color:white;border-radius:10px;padding:5px 7px;font-size:8px;font-weight:900}
+.fav{position:absolute;right:10px;top:10px;width:32px;height:32px;border-radius:50%;background:white;font-size:15px}
+.rest-body{padding:12px}.rest-title{display:flex;justify-content:space-between;gap:10px}.rest-title b{font-size:13px}.score{font-size:9px;font-weight:900}.rest-meta{font-size:9px;color:var(--muted);margin-top:6px}.chipline{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.chip{font-size:8px;font-weight:850;background:#f1ece5;border-radius:999px;padding:5px 7px;color:#5e594f}
+.nearby{display:flex;flex-direction:column;gap:10px}.place{background:var(--card);border:1px solid var(--line);border-radius:21px;padding:10px;display:grid;grid-template-columns:72px 1fr auto;gap:10px;align-items:center}
+.place-img{height:68px;border-radius:16px;background:#efe3d4;display:grid;place-items:center;font-size:38px}.place b{font-size:12px}.place p{font-size:9px;color:var(--muted);margin:4px 0 7px}.price{font-size:9px;font-weight:900;color:var(--green)}.arrow{font-size:18px;color:#aaa198}
+
+/* PAGES */
+.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:470px;height:76px;background:rgba(255,253,249,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:30;display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:max(5px,env(safe-area-inset-bottom))}
+.nav{background:transparent;color:#9a9388;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:850}.nav i{font-style:normal;font-size:20px}.nav.active{color:var(--red)}
+.page-head{padding:17px 18px 12px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:rgba(244,239,231,.93);backdrop-filter:blur(13px);z-index:12;border-bottom:1px solid rgba(231,223,211,.8)}
+.page-head h2{margin:0;font-size:18px}.page-head small{font-size:9px;color:var(--muted)}.page-head button{width:38px;height:38px;border-radius:13px;background:var(--card);border:1px solid var(--line)}
+.map-wrap{padding:12px 18px 0}.map{height:440px;border-radius:30px;background:#ddd5c9;position:relative;overflow:hidden;border:1px solid #d0c5b5;box-shadow:var(--shadow)}
+.road{position:absolute;background:#f8f5ef;border:1px solid #cfc5b9;border-radius:999px}.r1{width:520px;height:46px;left:-50px;top:92px;transform:rotate(-12deg)}.r2{width:520px;height:42px;left:-48px;top:250px;transform:rotate(17deg)}.r3{width:44px;height:520px;left:205px;top:-35px;transform:rotate(8deg)}
+.block{position:absolute;background:#d1c7b8;border-radius:18px;opacity:.8}.b1{width:90px;height:70px;left:24px;top:25px}.b2{width:115px;height:85px;right:20px;top:30px}.b3{width:110px;height:70px;left:45px;bottom:26px}.b4{width:115px;height:88px;right:26px;bottom:30px}
+.pin-rest{position:absolute;width:48px;height:48px;border-radius:16px;background:var(--red);color:white;display:grid;place-items:center;font-size:22px;box-shadow:0 9px 20px rgba(29,111,80,.24);border:3px solid white}.p1{left:70px;top:135px}.p2{right:70px;top:195px}.p3{left:165px;bottom:80px}.you{position:absolute;left:215px;top:210px;width:24px;height:24px;border-radius:50%;background:var(--green);border:5px solid white;box-shadow:0 0 0 6px rgba(22,122,85,.18)}
+.map-card{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(255,253,249,.95);backdrop-filter:blur(10px);border-radius:21px;padding:12px;display:flex;gap:10px;align-items:center}.map-card .thumb{width:55px;height:55px;border-radius:15px;background:#ecdccc;display:grid;place-items:center;font-size:30px}.map-card b{font-size:11px}.map-card small{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+
+/* ORDER */
+.no-order{text-align:center;padding:70px 24px;color:var(--muted)}.no-order .big{font-size:58px}.no-order h3{color:var(--ink);margin:12px 0 6px}.no-order p{font-size:11px;line-height:1.5}
+.order-card{margin:16px 18px;background:var(--ink);color:white;border-radius:28px;padding:18px}
+.order-card .status{color:#d9f0a9;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}.order-card h3{font-size:21px;margin:7px 0 5px}.order-card p{font-size:10px;color:#beb7ad;margin:0}
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:18px}.step{text-align:center}.dot{width:16px;height:16px;border-radius:50%;background:#5f5a54;margin:auto;border:3px solid #8f897f}.step.done .dot{background:var(--gold);border-color:#fff}.step small{display:block;font-size:7px;margin-top:5px;color:#aaa39a}.order-info{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.box{background:#26231f;border-radius:15px;padding:11px}.box small{display:block;font-size:8px;color:#9f988f}.box b{display:block;font-size:11px;margin-top:3px}
+.order-items{margin:0 18px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:13px}.order-items b{font-size:12px}.order-items div{font-size:9px;color:var(--muted);margin-top:5px}
+
+/* PROFILE */
+.profile{padding:18px}.profile-top{background:linear-gradient(135deg,#1c1a17,#2f2a24);color:white;border-radius:30px;padding:20px;position:relative;overflow:hidden}.profile-top::after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(29,111,80,.20);right:-25px;top:-35px}.avatar{width:62px;height:62px;border-radius:21px;background:var(--red);display:grid;place-items:center;font-size:26px;font-weight:950;position:relative;z-index:2}.profile-top h2{margin:12px 0 3px}.profile-top p{margin:0;font-size:9px;color:#bdb6ad}.profile-list{margin-top:14px;display:flex;flex-direction:column;gap:9px}.profile-item{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;display:flex;justify-content:space-between;font-size:11px}
+
+/* CART */
+.drawer-overlay{position:fixed;inset:0;background:rgba(17,14,11,.42);z-index:50;display:none;backdrop-filter:blur(2px)}.drawer-overlay.show{display:block}
+.drawer{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:470px;background:var(--bg);border-radius:30px 30px 0 0;z-index:60;display:none;max-height:88vh;overflow:hidden}.drawer.show{display:flex;flex-direction:column}
+.handle{width:44px;height:5px;border-radius:999px;background:#d2c9bc;margin:10px auto 0}.drawer-head{padding:12px 18px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)}.drawer-head h3{margin:0;font-size:17px}.drawer-head button{width:34px;height:34px;border-radius:11px;background:var(--card)}
+.cart-list{padding:8px 18px;overflow:auto;flex:1}.cart-item{display:grid;grid-template-columns:50px 1fr auto;gap:9px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.cart-thumb{width:50px;height:50px;border-radius:14px;background:#efe2d3;display:grid;place-items:center;font-size:26px}.cart-item b{font-size:11px}.cart-item small{display:block;font-size:9px;color:var(--muted);margin-top:3px}.qty{display:flex;gap:5px;align-items:center}.qty button{width:26px;height:26px;border-radius:8px;background:var(--card);border:1px solid var(--line)}.drawer-foot{padding:13px 18px 22px;background:var(--card);border-top:1px solid var(--line)}.sum{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin:6px 0}.sum.total{font-size:15px;font-weight:900;color:var(--ink)}.checkout{width:100%;margin-top:9px;background:var(--red);color:white;border-radius:16px;padding:14px;font-weight:900}
+.cart-fab{position:fixed;right:max(18px,calc((100vw - 470px)/2 + 18px));bottom:86px;z-index:35;width:58px;height:58px;border-radius:20px;background:var(--red);color:white;font-size:21px;box-shadow:0 12px 25px rgba(29,111,80,.24);display:none}.cart-fab.show{display:block}.cart-count{position:absolute;right:-5px;top:-5px;min-width:21px;height:21px;padding:0 5px;border-radius:999px;background:var(--gold);color:var(--ink);font-size:9px;font-weight:950;display:grid;place-items:center;border:2px solid var(--bg)}
+.toast{position:fixed;left:50%;bottom:95px;transform:translateX(-50%) translateY(18px);background:var(--ink);color:white;border-radius:14px;padding:10px 13px;font-size:10px;z-index:300;opacity:0;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.service-switch{
+  margin:14px 18px 0;background:#e9e1d5;border-radius:18px;padding:5px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:5px
+}
+.service-btn{
+  background:transparent;color:#6f675e;border-radius:14px;padding:10px 6px;
+  font-size:10px;font-weight:900
+}
+.service-btn.active{background:var(--ink);color:white;box-shadow:0 6px 16px rgba(23,21,18,.12)}
+.service-panel{display:none}
+.service-panel.active{display:block}
+.store-hero{
+  margin:16px 18px 0;border-radius:28px;padding:18px;color:white;
+  display:grid;grid-template-columns:1.2fr .8fr;gap:10px;align-items:center;overflow:hidden
+}
+.store-hero.market{background:linear-gradient(135deg,#1c684c,#3d8c6b)}
+.store-hero.pharmacy{background:linear-gradient(135deg,#27624e,#4c8d72)}
+.store-hero h3{font-size:21px;line-height:1.05;margin:5px 0 7px}
+.store-hero p{font-size:10px;line-height:1.5;margin:0;opacity:.85}
+.hero-icon{font-size:64px;text-align:center}
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.product-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:11px}
+.product-art{height:92px;border-radius:16px;background:#f1e8dc;display:grid;place-items:center;font-size:44px;margin-bottom:9px}
+.product-card b{font-size:11px;display:block}
+.product-card small{font-size:8px;color:var(--muted);display:block;margin-top:3px;line-height:1.35}
+.product-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
+.product-bottom strong{font-size:11px;color:var(--green)}
+.mini-add{width:30px;height:30px;border-radius:10px;background:var(--ink);color:white;font-size:17px}
+.brand-list{display:flex;flex-direction:column;gap:9px}
+.brand-row{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px;display:flex;align-items:center;gap:10px}
+.brand-logo{width:48px;height:48px;border-radius:15px;background:#efe6d9;display:grid;place-items:center;font-size:24px;flex:none}
+.brand-row b{font-size:11px}
+.brand-row small{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+
+
+.contact-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:14px}
+.contact-card b{display:block;font-size:12px;margin-bottom:6px}
+.contact-card p{margin:0;font-size:9px;color:var(--muted);line-height:1.4}
+.contact-link{display:inline-block;margin-top:8px;font-size:11px;font-weight:900;color:var(--red);text-decoration:none;word-break:break-all}
+.contact-link:hover{text-decoration:underline}
+
+@media(min-width:700px){body{padding:18px}.app{min-height:calc(100vh - 36px);border-radius:32px;box-shadow:var(--shadow)}.bottom-nav{bottom:18px;border-radius:0 0 32px 32px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN / REGISTER -->
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">A</div>
+    <h1>A tu puerta.</h1>
+    <p>Comida de Oruro en una experiencia rápida, clara y hecha para tu ciudad.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuth('login',this)">Ingresar</button>
+      <button class="auth-tab" onclick="switchAuth('register',this)">Crear cuenta</button>
+    </div>
+
+    <div id="loginPanel" class="auth-panel active">
+      <div class="field"><label>Usuario</label><input id="loginUser" placeholder="Tu usuario"></div>
+      <div class="field"><label>Contraseña</label><input id="loginPass" type="password" placeholder="Tu contraseña"></div>
+      <div id="loginError" class="login-error">Usuario o contraseña incorrectos.</div>
+      <button class="auth-submit" onclick="login()">Entrar a A tu puerta</button>
+      
+    </div>
+
+    <div id="registerPanel" class="auth-panel">
+      <div class="field"><label>Nombre</label><input id="regName" placeholder=""></div>
+      <div class="field"><label>Usuario</label><input id="regUser" placeholder=""></div>
+      <div class="field"><label>Contraseña</label><input id="regPass" type="password" placeholder=""></div>
+      <button class="auth-submit" onclick="register()">Crear cuenta</button>
+      
+    </div>
+  </div>
+</section>
+
+<div class="app">
+<section id="discover" class="screen active">
+<header class="header pattern">
+  <div class="topbar">
+    <div class="logo-wrap"><div class="logo">A</div><div class="brand"><b>A tu puerta</b><small>Oruro, Bolivia</small></div></div>
+    <button class="iconbtn" onclick="toast('No tienes notificaciones nuevas')">◔</button>
+  </div>
+  <div class="greeting"><small>Buenas noches</small><h1>Tu ciudad sabe mejor desde aquí.</h1><p>Comida rápida, platos locales, cafetería, postres y mucho más en Oruro.</p></div>
+  <div class="address-card"><div class="address-left"><div class="pin">⌖</div><div><b>Oruro · Zona Centro</b><small>Entrega estimada desde 18 min</small></div></div><span>›</span></div>
+</header>
+
+<div class="search-wrap"><div class="search"><span>⌕</span><input id="search" placeholder="¿Qué quieres comer?" oninput="filterAll()"><button class="filter" onclick="toast('Busca por pizza, pollo, api, salteña...')">☷</button></div></div>
+<div class="service-switch">
+  <button class="service-btn active" onclick="switchService('food',this)">🍽️ Comida</button>
+  <button class="service-btn" onclick="switchService('market',this)">🛒 Supermercado</button>
+  <button class="service-btn" onclick="switchService('pharmacy',this)">✚ Farmacia</button>
+</div>
+<div id="foodPanel" class="service-panel active">
+
+
+<section class="section">
+  <div class="section-head"><div><h2>Empieza por aquí</h2><small>Según tu antojo</small></div></div>
+  <div class="quick-grid">
+    <button class="quick active" data-cat="Todos" onclick="pick(this)"><span class="ico">✦</span><span>Todo</span></button>
+    <button class="quick" data-cat="Boliviana" onclick="pick(this)"><span class="ico">🥟</span><span>Boliviano</span></button>
+    <button class="quick" data-cat="Hamburguesas" onclick="pick(this)"><span class="ico">🍔</span><span>Burgers</span></button>
+    <button class="quick" data-cat="Pollo" onclick="pick(this)"><span class="ico">🍗</span><span>Pollo</span></button>
+  </div>
+</section>
+
+<div class="hero-card pattern">
+  <div><small>Selección de la casa</small><h3>No sabes qué pedir?</h3><p>Deja que A tu puerta te elija algo al azar entre los favoritos de Oruro.</p><button onclick="randomOrderSuggestion()">Elegir por mí</button></div>
+  <div class="hero-food" id="heroFood">🍲</div>
+</div>
+
+<section class="section">
+  <div class="section-head"><div><h2>Hoy vale la pena</h2><small>Favoritos de Oruro</small></div><button class="link">Ver más</button></div>
+  <div class="scroll-row">
+    <article class="restaurant-card food-card" data-cat="Hamburguesas" data-name="Taller 9" onclick="addQuick('Doble Taller',34,'🍔')"><div class="restaurant-art"><span class="tag">RECOMENDADO</span><button class="fav" onclick="event.stopPropagation();toggleFav(this)">♡</button>🍔</div><div class="rest-body"><div class="rest-title"><b>Taller 9</b><span class="score">★ 4.9</span></div><div class="rest-meta">Hamburguesas · 18–26 min</div><div class="chipline"><span class="chip">Bs 5 envío</span><span class="chip">Muy pedido</span></div></div></article>
+    <article class="restaurant-card food-card" data-cat="Boliviana" data-name="Casa Kolla" onclick="addQuick('Salteña especial',14,'🥟')"><div class="restaurant-art"><span class="tag">LOCAL</span><button class="fav" onclick="event.stopPropagation();toggleFav(this)">♡</button>🥟</div><div class="rest-body"><div class="rest-title"><b>Casa Kolla</b><span class="score">★ 4.8</span></div><div class="rest-meta">Boliviana · 20–30 min</div><div class="chipline"><span class="chip">Bs 4 envío</span><span class="chip">Sabor local</span></div></div></article>
+    <article class="restaurant-card food-card" data-cat="Pollo" data-name="Fuego Norte" onclick="addQuick('Combo Fuego',31,'🍗')"><div class="restaurant-art"><span class="tag">RÁPIDO</span><button class="fav" onclick="event.stopPropagation();toggleFav(this)">♡</button>🍗</div><div class="rest-body"><div class="rest-title"><b>Fuego Norte</b><span class="score">★ 4.7</span></div><div class="rest-meta">Pollo · 17–24 min</div><div class="chipline"><span class="chip">Bs 3 envío</span><span class="chip">Combo</span></div></div></article>
+    <article class="restaurant-card food-card" data-cat="Pizza" data-name="Masa Andina" onclick="addQuick('Pizza mediana',42,'🍕')"><div class="restaurant-art"><span class="tag">2X1</span><button class="fav" onclick="event.stopPropagation();toggleFav(this)">♡</button>🍕</div><div class="rest-body"><div class="rest-title"><b>Masa Andina</b><span class="score">★ 4.7</span></div><div class="rest-meta">Pizza · 25–35 min</div><div class="chipline"><span class="chip">Bs 6 envío</span><span class="chip">Para compartir</span></div></div></article>
+    <article class="restaurant-card food-card" data-cat="Dulce" data-name="Nube Café" onclick="addQuick('Torta y café',22,'🍰')"><div class="restaurant-art"><span class="tag">DULCE</span><button class="fav" onclick="event.stopPropagation();toggleFav(this)">♡</button>🍰</div><div class="rest-body"><div class="rest-title"><b>Nube Café</b><span class="score">★ 4.8</span></div><div class="rest-meta">Café y postres · 16–24 min</div><div class="chipline"><span class="chip">Bs 4 envío</span><span class="chip">Postres</span></div></div></article>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head"><div><h2>Comida boliviana</h2><small>Sabores conocidos</small></div></div>
+  <div class="nearby">
+    <article class="place food-card" data-cat="Boliviana" data-name="Rincón Orureño" onclick="addQuick('Charquekan',38,'🥩')"><div class="place-img">🥩</div><div><b>Rincón Orureño</b><p>Charquekan · 25–35 min · ★ 4.9</p><span class="price">Bs 5 envío</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="Sabor del Altiplano" onclick="addQuick('Pique macho',36,'🍛')"><div class="place-img">🍛</div><div><b>Sabor del Altiplano</b><p>Pique macho · 28–38 min · ★ 4.8</p><span class="price">Bs 5 envío</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="La Esquina del Api" onclick="addQuick('Api con pastel',12,'☕')"><div class="place-img">☕</div><div><b>La Esquina del Api</b><p>Api, buñuelos y pasteles · 15–22 min · ★ 4.8</p><span class="price">Bs 3 envío</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="Salteñas 10 de Febrero" onclick="addQuick('2 salteñas',18,'🥟')"><div class="place-img">🥟</div><div><b>Salteñas 10 de Febrero</b><p>Salteñas · 14–20 min · ★ 4.9</p><span class="price">Bs 3 envío</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="Cocina Sajama" onclick="addQuick('Sopa de maní',24,'🥣')"><div class="place-img">🥣</div><div><b>Cocina Sajama</b><p>Sopa de maní · 23–30 min · ★ 4.7</p><span class="price">Bs 4 envío</span></div><span class="arrow">›</span></article>
+  </div>
+</section>
+
+<section class="section" style="padding-bottom:20px">
+  <div class="section-head"><div><h2>Más cerca de ti</h2><small>Más variedad en Oruro</small></div></div>
+  <div class="nearby">
+    <article class="place food-card" data-cat="Hamburguesas" data-name="Barrio Burger" onclick="addQuick('Barrio Burger',29,'🍔')"><div class="place-img">🍔</div><div><b>Barrio Burger</b><p>Hamburguesas · 20–28 min · ★ 4.7</p><span class="price">Envío Bs 5</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Pollo" data-name="Cruce 12" onclick="addQuick('Pollo Cruce',27,'🍗')"><div class="place-img">🍗</div><div><b>Cruce 12</b><p>Pollo · 18–25 min · ★ 4.9</p><span class="price">Envío Bs 3</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Pizza" data-name="Pizzería Central" onclick="addQuick('Pizza familiar',58,'🍕')"><div class="place-img">🍕</div><div><b>Pizzería Central</b><p>Pizza · 26–38 min · ★ 4.6</p><span class="price">Envío Bs 6</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Dulce" data-name="Dulce Altura" onclick="addQuick('Waffle especial',24,'🧇')"><div class="place-img">🧇</div><div><b>Dulce Altura</b><p>Waffles y postres · 18–25 min · ★ 4.8</p><span class="price">Envío Bs 4</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Bebidas" data-name="Frutazo Oruro" onclick="addQuick('Jugo grande',16,'🥤')"><div class="place-img">🥤</div><div><b>Frutazo Oruro</b><p>Jugos y smoothies · 12–18 min · ★ 4.7</p><span class="price">Envío Bs 3</span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Hamburguesas" data-name="Plan B" onclick="addQuick('Mega combo',39,'🍔')"><div class="place-img">🍔</div><div><b>Plan B</b><p>Burgers y papas · 22–30 min · ★ 4.8</p><span class="price">Envío Bs 4</span></div><span class="arrow">›</span></article>
+  </div>
+</section>
+
+<section class="section" style="padding-bottom:20px">
+  <div class="section-head"><div><h2>Más lugares de Oruro</h2><small>Más opciones para descubrir</small></div></div>
+  <div class="nearby">
+    <article class="place food-card" data-cat="Boliviana" data-name="Restaurant Nayjama" onclick="addQuick('Menú Nayjama',38,'🍲')"><div class="place-img">🍲</div><div><b>Restaurant Nayjama</b><p>Restaurante · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Hamburguesas" data-name="Factory Xpress" onclick="addQuick('Combo Factory',36,'🍔')"><div class="place-img">🍔</div><div><b>Factory Xpress</b><p>Comida rápida · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Pizza" data-name="La Casona" onclick="addQuick('Pizza La Casona',44,'🍕')"><div class="place-img">🍕</div><div><b>La Casona</b><p>Pizzería · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Dulce" data-name="Typica Oruro" onclick="addQuick('Café y postre',24,'☕')"><div class="place-img">☕</div><div><b>Typica Oruro</b><p>Cafetería · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="Restaurante E y B" onclick="addQuick('Menú E y B',32,'🍛')"><div class="place-img">🍛</div><div><b>Restaurante E y B</b><p>Restaurante · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+    <article class="place food-card" data-cat="Boliviana" data-name="El Asador de la Diabla" onclick="addQuick('Parrillada demo',48,'🥩')"><div class="place-img">🥩</div><div><b>El Asador de la Diabla</b><p>Restaurante · Oruro</p><span class="price"></span></div><span class="arrow">›</span></article>
+  </div>
+</section>
+</div>
+
+<div id="marketPanel" class="service-panel">
+  <div class="store-hero market pattern">
+    <div><small>Supermercado</small><h3>La despensa también llega a tu puerta.</h3><p>Compra básicos, bebidas, limpieza, frutas y snacks sin salir de la app.</p></div>
+    <div class="hero-icon">🛒</div>
+  </div>
+  <section class="section">
+    <div class="section-head"><div><h2>Supermercados</h2><small>Opciones de Oruro</small></div></div>
+    <div class="brand-list">
+      <div class="brand-row"><div class="brand-logo">🛒</div><div><b>Supermercado Global</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🧺</div><div><b>Supermercado RED</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🏪</div><div><b>GOLDEN MARKET</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🛍️</div><div><b>Supermercado ORBIX</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🥬</div><div><b>Mercado Las Américas</b><small></small></div></div>
+    </div>
+  </section>
+  <section class="section" style="padding-bottom:20px">
+    <div class="section-head"><div><h2>Productos populares</h2><small>Precios simulados</small></div></div>
+    <div class="product-grid">
+      <div class="product-card"><div class="product-art">🥛</div><b>Leche 1 L</b><small>Lácteos</small><div class="product-bottom"><strong>Bs 9</strong><button class="mini-add" onclick="addQuick('Leche 1 L',9,'🥛')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🍞</div><b>Pan de molde</b><small>Panadería</small><div class="product-bottom"><strong>Bs 12</strong><button class="mini-add" onclick="addQuick('Pan de molde',12,'🍞')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🥚</div><b>Huevos x12</b><small>Canasta básica</small><div class="product-bottom"><strong>Bs 18</strong><button class="mini-add" onclick="addQuick('Huevos x12',18,'🥚')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🍚</div><b>Arroz 1 kg</b><small>Despensa</small><div class="product-bottom"><strong>Bs 13</strong><button class="mini-add" onclick="addQuick('Arroz 1 kg',13,'🍚')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🥤</div><b>Gaseosa 2 L</b><small>Bebidas</small><div class="product-bottom"><strong>Bs 14</strong><button class="mini-add" onclick="addQuick('Gaseosa 2 L',14,'🥤')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🍪</div><b>Galletas</b><small>Snacks</small><div class="product-bottom"><strong>Bs 8</strong><button class="mini-add" onclick="addQuick('Galletas',8,'🍪')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧻</div><b>Papel higiénico</b><small>Hogar</small><div class="product-bottom"><strong>Bs 17</strong><button class="mini-add" onclick="addQuick('Papel higiénico',17,'🧻')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧼</div><b>Jabón líquido</b><small>Limpieza</small><div class="product-bottom"><strong>Bs 15</strong><button class="mini-add" onclick="addQuick('Jabón líquido',15,'🧼')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🍎</div><b>Manzanas 1 kg</b><small>Frutas</small><div class="product-bottom"><strong>Bs 16</strong><button class="mini-add" onclick="addQuick('Manzanas 1 kg',16,'🍎')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🥔</div><b>Papa 2 kg</b><small>Verduras</small><div class="product-bottom"><strong>Bs 14</strong><button class="mini-add" onclick="addQuick('Papa 2 kg',14,'🥔')">+</button></div></div>
+    </div>
+  </section>
+</div>
+
+<div id="pharmacyPanel" class="service-panel">
+  <div class="store-hero pharmacy pattern">
+    <div><small>Farmacia</small><h3>Cuidado personal y primeros auxilios.</h3><p>Higiene, protección y cuidado cotidiano dentro de la misma app.</p></div>
+    <div class="hero-icon">✚</div>
+  </div>
+  <section class="section">
+    <div class="section-head"><div><h2>Farmacias</h2><small>Opciones de Oruro</small></div></div>
+    <div class="brand-list">
+      <div class="brand-row"><div class="brand-logo">✚</div><div><b>Farmacorp</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">💚</div><div><b>Farmacia FarmaSol</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🩺</div><div><b>FarmaElías</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">✚</div><div><b>Farmacia La Popular</b><small></small></div></div>
+      <div class="brand-row"><div class="brand-logo">🧴</div><div><b>Farmacia Infinita</b><small></small></div></div>
+    </div>
+  </section>
+  <section class="section" style="padding-bottom:20px">
+    <div class="section-head"><div><h2>Cuidado personal</h2><small>Precios simulados</small></div></div>
+    <div class="product-grid">
+      <div class="product-card"><div class="product-art">🩹</div><b>Curitas</b><small>Primeros auxilios</small><div class="product-bottom"><strong>Bs 10</strong><button class="mini-add" onclick="addQuick('Curitas',10,'🩹')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧴</div><b>Alcohol en gel</b><small>Higiene</small><div class="product-bottom"><strong>Bs 14</strong><button class="mini-add" onclick="addQuick('Alcohol en gel',14,'🧴')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧼</div><b>Jabón antibacterial</b><small>Higiene</small><div class="product-bottom"><strong>Bs 12</strong><button class="mini-add" onclick="addQuick('Jabón antibacterial',12,'🧼')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🪥</div><b>Cepillo dental</b><small>Cuidado dental</small><div class="product-bottom"><strong>Bs 16</strong><button class="mini-add" onclick="addQuick('Cepillo dental',16,'🪥')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🦷</div><b>Pasta dental</b><small>Cuidado dental</small><div class="product-bottom"><strong>Bs 18</strong><button class="mini-add" onclick="addQuick('Pasta dental',18,'🦷')">+</button></div></div>
+      <div class="product-card"><div class="product-art">☀️</div><b>Protector solar</b><small>Cuidado de la piel</small><div class="product-bottom"><strong>Bs 48</strong><button class="mini-add" onclick="addQuick('Protector solar',48,'☀️')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧻</div><b>Pañuelos</b><small>Higiene</small><div class="product-bottom"><strong>Bs 8</strong><button class="mini-add" onclick="addQuick('Pañuelos',8,'🧻')">+</button></div></div>
+      <div class="product-card"><div class="product-art">🧴</div><b>Shampoo</b><small>Cuidado personal</small><div class="product-bottom"><strong>Bs 28</strong><button class="mini-add" onclick="addQuick('Shampoo',28,'🧴')">+</button></div></div>
+    </div>
+  </section>
+</div>
+
+</section>
+
+<section id="map" class="screen">
+<div class="page-head"><div><h2>Mapa</h2><small>Comida alrededor de Oruro</small></div><button onclick="toast('Mapa centrado en tu zona')">⌖</button></div>
+<div class="map-wrap"><div class="map"><div class="block b1"></div><div class="block b2"></div><div class="block b3"></div><div class="block b4"></div><div class="road r1"></div><div class="road r2"></div><div class="road r3"></div><button class="pin-rest p1" onclick="toast('Taller 9 · 6 min')">🍔</button><button class="pin-rest p2" onclick="toast('Casa Kolla · 8 min')">🥟</button><button class="pin-rest p3" onclick="toast('Fuego Norte · 5 min')">🍗</button><div class="you"></div><div class="map-card"><div class="thumb">🍔</div><div style="flex:1"><b>Taller 9</b><small>6 min de tu ubicación · ★ 4.9</small></div><span>›</span></div></div></div>
+</section>
+
+<section id="orders" class="screen">
+<div class="page-head"><div><h2>Pedidos</h2><small>Seguimiento de tu compra</small></div><button onclick="toast('Centro de ayuda')">?</button></div>
+<div id="noOrder" class="no-order"><div class="big">🛵</div><h3>Aún no tienes un pedido activo</h3><p>Cuando confirmes algo desde el carrito, aquí aparecerá su preparación y entrega en tiempo real.</p></div>
+<div id="activeOrder" style="display:none">
+  <div class="order-card pattern">
+    <div id="orderStatus" class="status">Pedido recibido</div>
+    <h3 id="orderTitle">Estamos preparando tu pedido.</h3>
+    <p id="orderId">Pedido #ATP0000</p>
+    <div class="timeline">
+      <div class="step" id="step1"><div class="dot"></div><small>Pedido</small></div>
+      <div class="step" id="step2"><div class="dot"></div><small>Cocina</small></div>
+      <div class="step" id="step3"><div class="dot"></div><small>En camino</small></div>
+      <div class="step" id="step4"><div class="dot"></div><small>Entregado</small></div>
+    </div>
+    <div class="order-info"><div class="box"><small>Tiempo estimado</small><b id="eta">30 min</b></div><div class="box"><small>Estado</small><b id="statusMini">Recibido</b></div></div>
+  </div>
+  <div class="order-items"><b>Tu pedido</b><div id="orderProducts">—</div></div>
+</div>
+</section>
+
+<section id="profile" class="screen">
+<div class="page-head"><div><h2>Perfil</h2><small>Tu cuenta en A tu puerta</small></div><button onclick="toast('Configuración')">⚙</button></div>
+<div class="profile">
+  <div class="profile-top pattern">
+    <div class="avatar" id="profileInitial">P</div>
+    <h2 id="profileName">Usuario</h2>
+    <p id="profileUser">@usuario · Oruro, Bolivia</p>
+  </div>
+  <div class="profile-list">
+    <div class="profile-item"><span>⌖ Mis direcciones</span><span>›</span></div>
+    <div class="profile-item"><span>◈ Métodos de pago</span><span>›</span></div>
+    <div class="profile-item"><span>✦ Promociones</span><span>›</span></div>
+    <div class="profile-item"><span>♡ Favoritos</span><span>›</span></div>
+    <div class="profile-item" onclick="logout()"><span>↪ Cerrar sesión</span><span>›</span></div>
+  </div>
+  <div class="contact-card">
+    <b>Contacto</b>
+    <p>Para dudas, soporte o información general:</p>
+    <a class="contact-link" href="https://mail.google.com/mail/u/1/" target="_blank">atupuerta26@gmail.com</a>
+  </div>
+</div>
+</section>
+
+<button id="cartFab" class="cart-fab" onclick="openCart()">◈<span id="cartCount" class="cart-count">0</span></button>
+<div id="overlay" class="drawer-overlay" onclick="closeCart()"></div>
+<div id="drawer" class="drawer">
+  <div class="handle"></div>
+  <div class="drawer-head"><h3>Tu pedido</h3><button onclick="closeCart()">×</button></div>
+  <div id="cartList" class="cart-list"></div>
+  <div class="drawer-foot"><div class="sum"><span>Productos</span><b id="subtotal">Bs 0</b></div><div class="sum"><span>Envío</span><b>Bs 4</b></div><div class="sum total"><span>Total</span><b id="total">Bs 0</b></div><button class="checkout" onclick="checkout()">Confirmar pedido</button></div>
+</div>
+
+<nav class="bottom-nav">
+<button class="nav active" data-screen="discover" onclick="showScreen('discover',this)"><i>⌂</i>Descubrir</button>
+<button class="nav" data-screen="map" onclick="showScreen('map',this)"><i>⌖</i>Mapa</button>
+<button class="nav" data-screen="orders" onclick="showScreen('orders',this)"><i>◴</i>Pedidos</button>
+<button class="nav" data-screen="profile" onclick="showScreen('profile',this)"><i>☺</i>Perfil</button>
+</nav>
+<div id="toast" class="toast"></div>
+</div>
+
+<script>
+let category='Todos', cart=[], activeOrderData=null, orderTimer=null;
+const demo={name:'Maythe',user:'Maythe',pass:'1234'};
+const saved=JSON.parse(localStorage.getItem('atpUser')||'null');
+const session=localStorage.getItem('atpSession')==='1';
+if(session && saved){setUser(saved);document.getElementById('loginScreen').classList.add('hidden')}
+
+
+function switchService(type,btn){
+  document.querySelectorAll('.service-btn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.service-panel').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(type+'Panel').classList.add('active');
+  const search=document.getElementById('search');
+  search.value='';
+  search.placeholder=type==='food'?'¿Qué quieres comer?':type==='market'?'Busca productos del súper...':'Busca cuidado personal...';
+  window.scrollTo({top:150,behavior:'smooth'});
+}
+
+function switchAuth(type,btn){
+  document.querySelectorAll('.auth-tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('loginPanel').classList.toggle('active',type==='login');
+  document.getElementById('registerPanel').classList.toggle('active',type==='register');
+}
+function register(){
+  const name=document.getElementById('regName').value.trim(), user=document.getElementById('regUser').value.trim(), pass=document.getElementById('regPass').value;
+  if(!name||!user||!pass){toast('Completa todos los campos');return}
+  const data={name,user,pass};localStorage.setItem('atpUser',JSON.stringify(data));localStorage.setItem('atpSession','1');
+  setUser(data);document.getElementById('loginScreen').classList.add('hidden');toast('Cuenta creada');
+}
+function login(){
+  const u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value;
+  const custom=JSON.parse(localStorage.getItem('atpUser')||'null');
+  const data=(custom&&u===custom.user&&p===custom.pass)?custom:(u===demo.user&&p===demo.pass?demo:null);
+  if(!data){document.getElementById('loginError').style.display='block';return}
+  document.getElementById('loginError').style.display='none';localStorage.setItem('atpSession','1');
+  if(!custom && data===demo)localStorage.setItem('atpUser',JSON.stringify(demo));
+  setUser(data);document.getElementById('loginScreen').classList.add('hidden');toast('Bienvenido, '+data.name);
+}
+function logout(){localStorage.setItem('atpSession','0');document.getElementById('loginScreen').classList.remove('hidden');showScreen('discover',document.querySelector('.nav[data-screen="discover"]'))}
+function setUser(data){
+  document.getElementById('profileName').textContent=data.name;
+  document.getElementById('profileUser').textContent='@'+data.user+' · Oruro, Bolivia';
+  document.getElementById('profileInitial').textContent=(data.name||'A').charAt(0).toUpperCase();
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),1600)}
+function showScreen(id,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));if(btn)btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function pick(btn){document.querySelectorAll('.quick').forEach(q=>q.classList.remove('active'));btn.classList.add('active');category=btn.dataset.cat;filterAll()}
+function filterAll(){const q=document.getElementById('search').value.toLowerCase().trim();document.querySelectorAll('.food-card').forEach(card=>{const okCat=category==='Todos'||card.dataset.cat===category;const okText=(card.dataset.name+' '+card.dataset.cat).toLowerCase().includes(q);card.style.display=okCat&&okText?'':'none'})}
+function randomOrderSuggestion(){
+  const picks=[['🍔','Doble Taller',34],['🥟','2 salteñas',18],['🍗','Combo Fuego',31],['🍲','Sopa de maní',24],['🥩','Charquekan',38],['🍕','Pizza mediana',42],['☕','Api con pastel',12]];
+  const p=picks[Math.floor(Math.random()*picks.length)];document.getElementById('heroFood').textContent=p[0];addQuick(p[1],p[2],p[0]);toast('Te elegimos: '+p[1]);
+}
+function toggleFav(btn){btn.textContent=btn.textContent==='♡'?'♥':'♡';toast(btn.textContent==='♥'?'Guardado en favoritos':'Quitado de favoritos')}
+function addQuick(name,price,emoji){const found=cart.find(x=>x.name===name);if(found)found.qty++;else cart.push({name,price,emoji,qty:1});updateCart();toast(name+' agregado')}
+function updateCart(){
+  const count=cart.reduce((s,x)=>s+x.qty,0), sub=cart.reduce((s,x)=>s+x.price*x.qty,0);
+  document.getElementById('cartCount').textContent=count;document.getElementById('cartFab').classList.toggle('show',count>0);
+  document.getElementById('subtotal').textContent='Bs '+sub;document.getElementById('total').textContent='Bs '+(count?sub+4:0);
+  const list=document.getElementById('cartList');
+  list.innerHTML=count?cart.map((x,i)=>`<div class="cart-item"><div class="cart-thumb">${x.emoji}</div><div><b>${x.name}</b><small>Bs ${x.price}</small></div><div class="qty"><button onclick="qty(${i},-1)">−</button><b>${x.qty}</b><button onclick="qty(${i},1)">+</button></div></div>`).join(''):'<div style="text-align:center;padding:48px 15px;color:#817b72"><div style="font-size:50px">◈</div><h3>Tu carrito está vacío</h3><p style="font-size:11px">Agrega algo y aparecerá aquí.</p></div>';
+}
+function qty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart()}
+function openCart(){document.getElementById('overlay').classList.add('show');document.getElementById('drawer').classList.add('show');updateCart()}
+function closeCart(){document.getElementById('overlay').classList.remove('show');document.getElementById('drawer').classList.remove('show')}
+function checkout(){
+  if(!cart.length){toast('Tu carrito está vacío');return}
+  activeOrderData={id:'ATP'+Math.floor(1000+Math.random()*9000),items:cart.map(x=>({...x})),stage:1};
+  cart=[];updateCart();closeCart();renderOrder();startOrderProgress();
+  const nav=document.querySelector('.nav[data-screen="orders"]');showScreen('orders',nav);toast('Pedido confirmado');
+}
+function renderOrder(){
+  if(!activeOrderData){document.getElementById('noOrder').style.display='block';document.getElementById('activeOrder').style.display='none';return}
+  document.getElementById('noOrder').style.display='none';document.getElementById('activeOrder').style.display='block';
+  document.getElementById('orderId').textContent='Pedido #'+activeOrderData.id;
+  document.getElementById('orderProducts').textContent=activeOrderData.items.map(x=>x.qty+'× '+x.name).join(' · ');
+  const stages=[
+    {status:'Pedido recibido',title:'Recibimos tu pedido.',eta:'30 min',mini:'Recibido'},
+    {status:'En preparación',title:'La cocina ya está trabajando.',eta:'22 min',mini:'Cocinando'},
+    {status:'En camino',title:'Tu pedido ya salió.',eta:'12 min',mini:'En camino'},
+    {status:'Entregado',title:'¡Tu pedido llegó!',eta:'Entregado',mini:'Listo'}
+  ];
+  const s=stages[activeOrderData.stage-1];
+  document.getElementById('orderStatus').textContent=s.status;document.getElementById('orderTitle').textContent=s.title;document.getElementById('eta').textContent=s.eta;document.getElementById('statusMini').textContent=s.mini;
+  [1,2,3,4].forEach(i=>document.getElementById('step'+i).classList.toggle('done',i<=activeOrderData.stage));
+}
+function startOrderProgress(){
+  clearInterval(orderTimer);
+  orderTimer=setInterval(()=>{
+    if(!activeOrderData){clearInterval(orderTimer);return}
+    if(activeOrderData.stage<4){activeOrderData.stage++;renderOrder()}
+    else clearInterval(orderTimer);
+  },6500);
+}
+renderOrder();updateCart();
+</script>
+</body>
+</html>
